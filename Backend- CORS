@@ -1,0 +1,81 @@
+@Configuration
+public class CorsConfig{
+@Bean
+public WebMvcConfigurer corsfigurer(){
+return new WebMvcConfigurer(){
+@Override
+public void addCorsMappings(CorsRegistry registry){
+registry.addMapping("/api/**")
+.allowedOrigins("http://localhost:3000")
+.allowedMethods("GET", "POST", "PUT"< "DELETE");
+};
+}
+}
+
+
+
+
+const handleSend=async (text) =>{
+const newMessage={sender: "user", text};
+setMessages([...messages, newMessages]);
+try{
+setIsLoading(true);
+const res=await fetch("htttp://localhost:8080/api/chat", {
+method: "POST",
+headers: { "Content-type";
+"application/json"};
+body: JSON.stringify({message:text});
+const data= await res.json();
+const aiReply={sender: "ai", text:data.reply};
+setMessages((prev) => [...prev, aiReply]);
+addToHistory([...messages, newMessage, aiReply]);
+}catch(err){
+console.error("Error:", err);
+}finally{
+setIsLoading(false);
+}
+};
+{"reply": "This is AI's response"}
+
+
+
+FROM  openjdk:17-jdk-slim
+WORKDIR /app
+COPY target/backend-0.0.1-SNAPSHOT.jar
+app.jar
+EXPOSE 8080
+ENTRYPOINT ["java", "-jar", "app.jar"]
+
+
+FROM node:18 AS build
+WORKDIR /app
+COPY . .
+RUN npm install
+RUN npm run build
+FROM nginx:alpine
+COPY --from=build /app/build/usr/share/nginx/html
+EXPOSE 80
+
+
+
+version: "3.8"
+services:
+backend:
+build: ./backend
+ports:
+-"8080:8080"
+networks:
+-app-network
+
+frontend:
+build: ./frontend
+ports:
+-"3000:80"
+networks:
+-app-network
+depends_on:
+-backend
+
+networks:
+app-network:
+driver:bridge
