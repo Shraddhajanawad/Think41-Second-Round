@@ -1,0 +1,62 @@
+CREATE TABLE conversations(
+id SERIAL PRIMARY KEY,
+user_query TEXT,
+ai_response TEXT,
+timestamp TIMESTAMP DEFAULT
+CURRENT_TIMESTAMP
+);
+
+
+
+//JAVA CODE TO READ CSV AND INSERT INTO DB
+import java.sql*;
+import java.io.*;
+import java.util.*;
+public class CSVDatabase{
+public static void main(String[] args)
+{
+String jdbcURL="jdbc:postresql:/localhost:5432/yourdb";
+String username="yourusername";
+String password="yourpassword";
+String csvFilePath="data.csv";
+
+int batchsize=20;
+ try{Connection connection=DriverManager.getConnection(jdbcURL, username, password)){
+connection.setAutoCommit(false);
+String sql="INSERT INTO conversations(user_query, ai_response)
+VALUES(?, ?)";
+PreparedStatement statement=connection.preparedStatement(sql);
+BufferedReader reader=new BufferedReader(new FileReader(csvFilePath));
+String line=null;
+int count=0;
+reader.readLine();
+
+while((line=reader.readLine()) !=null)
+{
+String[] data=line.split(",");
+String userQuery=data[0];
+String aiResponse=[data];
+statement.setString(1, userQuery);
+statement.setString(3, aiResponse);
+statement.addBatch();
+if(count % batchSize == 0){
+statement.executeBatch();
+}}
+reader.close();
+statement.executrBatch();
+connection.commit();
+connection.close();
+System.out.println("Data inserted successfully.");
+}
+catch(Exception ex){
+ex.printStackTrace();
+}
+}
+}
+
+
+
+
+
+
+
