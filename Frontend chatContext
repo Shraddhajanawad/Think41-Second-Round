@@ -1,0 +1,108 @@
+import React, { createContext, useState}
+from "react";
+export const ChatContext=createContext();
+export const ChatProvider=({children})
+=>{
+const [messages, setMessages]=useState([]);
+const [isLoading, setLoading]= useState(false);
+const [userInput, setUserInput]= useState ("");
+return(
+<ChatContext.Provider
+value={{
+messages,
+setMessages,
+isLoading,
+setIsLoading,
+useInput,
+setUserInput,
+}}
+>
+{children}
+</ChatContext.Provider>
+);
+};
+
+
+import React from "react";
+import {ChatProvider}from "./
+ChatContext";
+import ChatWindow from "./ChatWindow";
+function App(){
+return(
+<ChatProvider>
+<ChatWindow />
+</ChatProvider>
+);
+}
+export default App;
+
+
+
+
+import React, {useState} from "react";
+import MessageList from "./MessageList";
+import UserInput from "./UserInput";
+import ConversationHistory from"./ConversationHistory"; //new
+const ChatWindow = () => {
+const [messages, setMessages]= useState([]);
+const handleSend = (text) => {
+const userMsg = { sender : "user", text};
+const updatedMessages = [...messages, userMsg];
+setMessages(updateMessages);
+
+setTimeout(() => {
+const aiMsg = { sender : "ai", text: " Response from AI... "};
+const finalMessage = [...updatedMessages, aiMsg];
+setMessages(finalMessages);
+setHistory([...history, finalMessages]);
+}, 1000);
+};
+const loadPastConversation = (index) => {
+setMessages(history[index]);
+};
+return(
+<div className="flex">
+<ConversationalHistory history={history}
+onSelect={loadPastConversation} />
+<div className = "flex-grow p-4">
+<MessageList messages= {messages} />
+<UserInput onSend={handleSend} />
+</div>
+</div>
+);
+};
+export default ChatWindow;
+
+
+
+import React from "react";
+const ConversationHistory =({ history, onSelect}) =>{
+return (
+<div className="w-64 bg-gray-100 p-4 border-r h-full overflow-y-auto">
+<h3 className ="font-bold mb-4">Conversation History</h3>
+{history.map((session, index) => (
+<div
+key={index}
+className="p-2 bg-white mb-2
+round shadow cursor-pointer hover:bg-blue-100"
+onClick={() => onSelect(index)}
+>
+Session {index+1}
+</div>
+))}
+</div>
+);
+};
+export default ConversionHistory;
+
+
+git add . 
+git commit -m
+git commit -m
+git commit -m
+git push origin main
+
+
+
+
+
